@@ -1,21 +1,19 @@
 groundtruth_file = 'test.qrel_clean'
-answer_file = 'answer'
+answer_file = 'train.qrel_clean'
 
 q2reld = {} 
 for line in open(groundtruth_file):
     qid, did = [int(x) for x in line.split()]
-    if qid in q2reld.keys():
-        q2reld[qid].add(did)
-    else:
+    if qid not in q2reld.keys():
         q2reld[qid] = set()
+    q2reld[qid].add(did)        
 
 q2retrd = {}
 for line in open(answer_file):
     qid, did = [int(x) for x in line.split()]
-    if qid in q2retrd.keys():
-        q2retrd[qid].append(did)
-    else:
-        q2retrd[qid] = []       
+    if qid not in q2retrd.keys():
+        q2retrd[qid] = []
+    q2retrd[qid].append(did)               
 
 N = len(q2retrd.keys())
 precision = sum([len(q2reld[q].intersection(q2retrd[q]))*1.0/len(q2retrd[q]) for q in q2retrd.keys()]) / N
